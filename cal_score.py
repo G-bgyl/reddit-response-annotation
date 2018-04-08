@@ -144,14 +144,14 @@ if __name__ == '__main__':
     # array = [d.split() for d in data]  # convert to 2D list of string items
 
     # print("nominal metric: %.3f" % krippendorff_alpha(array, nominal_metric, missing_items=missing))
-    print("interval metric: %.3f" % krippendorff_alpha(array, interval_metric, missing_items=missing))
+    print("interval metric for online worker: %.3f" % krippendorff_alpha(array, interval_metric, missing_items=missing))
 
     # calculate pearson score:
     table_p = df.pivot_table(values='how_civil_was_the_reply_by_personb_', index=['post_id'], columns=['_worker_id'])
     correlation = table_p.corr(method='pearson', min_periods=1).round(3)
     step1_mean=correlation.mean()
     workers_mean= step1_mean.mean()
-    print('workers mean',workers_mean)
+    print('workers mean correlation: ',round(workers_mean,3))
     with open('hw6_correlation_result.csv', 'w') as hw6_correlation_result: # , open('untrack_question.csv', 'w') as untrack_question
         writer = csv.writer(hw6_correlation_result)
         for each in correlation:
@@ -173,8 +173,9 @@ if __name__ == '__main__':
             lst_u2.append(int(u2))
         return [lst_u0, lst_u1, lst_u2]
 
+
     group_data = get_array_group('group.tsv')
-    print("interval metric: %.3f" % krippendorff_alpha(group_data, interval_metric))
+
 
     correlation=[]
     for each1 in group_data:
@@ -187,5 +188,7 @@ if __name__ == '__main__':
                 corr= stats.pearsonr(np.array(each1), np.array(each2))
                 correlation.append(corr[0])
     mean = np.mean(correlation)
-    pprint.pprint(correlation)
-    print(mean)
+    print("interval metric for group member: %.3f" % krippendorff_alpha(group_data, interval_metric))
+    print('group mean correlation: ',round(mean,3))
+
+
